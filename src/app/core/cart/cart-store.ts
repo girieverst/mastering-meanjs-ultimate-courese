@@ -1,22 +1,53 @@
-import { Injectable } from '@angular/core';
-import { Store } from '@core/store';
-import { CartState, intialState } from './cart-state';
-import { LogService } from '@core/log.service';
+import { Store } from "@core/store";
+import { CartItem } from "./cart-item";
+import { Injectable } from "@angular/core";
+import { CartState, initialState } from "./cart-state";
+import { LogService } from "@core/log.service";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class CartStore extends Store<CartState> {
   constructor(private logService: LogService) {
-    super(intialState);
+    super(initialState);
   }
 
-  addCartItem(cartItemToAdd: import('./cart-item').CartItem) {
-    console.log('[Cart] Add Cart Item');
+  addCartItem = (cartItemToAdd: CartItem) => {
+    this.logService.log("[Cart] Add Item", cartItemToAdd);
 
-    const newState = {
-      ...this.state, // cartItems
+    this.setState({
+      ...this.state,
       cartItems: [].concat(this.state.cartItems, cartItemToAdd)
-    };
+    });
+  };
 
-    this.setState(newState);
-  }
+  updateCartItem = (cartItemToUpdate: CartItem) => {
+    this.logService.log("[Cart] Update Item", cartItemToUpdate);
+
+    const newCartItems = this.state.cartItems.map(i =>
+      i.productId === cartItemToUpdate.productId ? cartItemToUpdate : i
+    );
+
+    this.setState({
+      ...this.state,
+      cartItems: newCartItems
+    });
+  };
+
+  removeCartItem = (cartItemToRemove: CartItem) => {
+    this.logService.log("[Cart] Remove Item", cartItemToRemove);
+
+    const newCartItems = this.state.cartItems.filter(
+      i => i.productId !== cartItemToRemove.productId
+    );
+
+    this.setState({
+      ...this.state,
+      cartItems: newCartItems
+    });
+  };
+
+  clearCart = () => {
+    this.logService.log("[Cart] Clear Item");
+
+    this.setState(initialState);
+  };
 }
