@@ -4,4 +4,4 @@ export interface CartState {
   cartItems: CartItem[];
 }
 
-export const intialState = { cartItems: [] };
+export const initialState = { cartItems: [] };
