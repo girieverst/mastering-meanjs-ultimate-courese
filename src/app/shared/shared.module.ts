@@ -1,21 +1,23 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { CommonModule } from "@angular/common";
+import { NgModule } from "@angular/core";
+import { FlexLayoutModule } from "@angular/flex-layout";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { RouterModule } from "@angular/router";
+import { CartItemsCountComponent } from "./cart/cart-items-count/cart-items-count.component";
+import { PmMaterialModule } from "./material-module";
+import { SharedRoutingModule } from "./shared-routing.module";
 
-import { SharedRoutingModule } from './shared-routing.module';
-import { RouterModule } from '@angular/router';
-import { PmMaterialModule } from './material-module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [],
+  declarations: [CartItemsCountComponent],
   imports: [CommonModule, SharedRoutingModule, RouterModule, PmMaterialModule],
   exports: [
     PmMaterialModule,
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
-    FlexLayoutModule
-  ]
+    FlexLayoutModule,
+    CartItemsCountComponent,
+  ],
 })
 export class SharedModule {}

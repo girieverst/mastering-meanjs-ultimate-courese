@@ -1,4 +1,5 @@
-import { Observable, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from "rxjs";
+import { map, distinctUntilChanged } from "rxjs/operators";
 
 export class Store<T> {
   state$: Observable<T>;
@@ -9,18 +10,24 @@ export class Store<T> {
     this.state$ = this._state$.asObservable();
   }
 
+  select<T>(selectorFunction: any): Observable<T> {
+    return this.state$.pipe(
+      distinctUntilChanged(),
+      map(selectorFunction));
+  }
+
   // sync
   get state() {
     return this._state$.getValue();
   }
 
   protected setState(nexState: T): void {
-    console.log('-----------------------');
-    console.log('Previous State', this.state);
+    console.log("-----------------------");
+    console.log("Previous State", this.state);
 
     this._state$.next(nexState);
 
-    console.log('Current State', this.state);
-    console.log('-----------------------');
+    console.log("Current State", this.state);
+    console.log("-----------------------");
   }
 }
