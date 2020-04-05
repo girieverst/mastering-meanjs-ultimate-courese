@@ -13,7 +13,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   dataSource = new MatTableDataSource<Product>();
   loading = true;
   subscriptions = [];
-  displayedColumns = ["imgUrl", "name", "price", "action"];
+  displayedColumns = ["imgUrl", "name", "price", "addToCart"];
 
   @ViewChild(MatSort) sort: MatSort;
 

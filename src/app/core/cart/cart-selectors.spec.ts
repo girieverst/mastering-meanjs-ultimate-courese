@@ -1,5 +1,5 @@
 import { CartItem } from "./cart-item";
-import { getCartItemsCount, isItemAlreadyInCart } from "./cart-selector";
+import { getCartItemsCount, getIsItemAlreadyInCart } from "./cart-selector";
 import { CartState } from "./cart-state";
 
 const given = beforeEach;
@@ -12,7 +12,7 @@ describe("Cart Store Selectors", () => {
     let result: number;
     given(() => {
       const tenApples: CartItem = {
-        productId: 1,
+        id: 1,
         quantity: 10,
         imgUrl: "img/apple",
         itemTotal: 20,
@@ -20,7 +20,7 @@ describe("Cart Store Selectors", () => {
         price: 2,
       };
       const fiveOranges: CartItem = {
-        productId: 1,
+        id: 1,
         quantity: 5,
         imgUrl: "img/orange",
         itemTotal: 20,
@@ -41,7 +41,7 @@ describe("Cart Store Selectors", () => {
 
   it("can find cart item", () => {
     const itemInCart: CartItem = {
-      productId: 1,
+      id: 1,
       imgUrl: "img/apple",
       itemTotal: 20,
       name: "apple",
@@ -49,7 +49,7 @@ describe("Cart Store Selectors", () => {
       quantity: 10,
     };
     const itemInCart1: CartItem = {
-      productId: 2,
+      id: 2,
       imgUrl: "img/orange",
       itemTotal: 20,
       name: "orange",
@@ -57,11 +57,11 @@ describe("Cart Store Selectors", () => {
       quantity: 5,
     };
     const state: CartState = {
-      cartItems: [itemInCart, itemInCart1]
+      cartItems: [itemInCart, itemInCart1],
     };
-    const itemExists = isItemAlreadyInCart(state, 2);
+    const itemExists = getIsItemAlreadyInCart(2)(state);
     expect(itemExists).toBeTruthy();
-    const itemExists1 = isItemAlreadyInCart(state,4);
+    const itemExists1 = getIsItemAlreadyInCart(4)(state);
     expect(itemExists1).toBeFalsy();
   });
 });

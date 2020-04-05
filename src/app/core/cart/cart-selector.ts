@@ -13,8 +13,8 @@ export const getCartItemsCount = (state: CartState) => {
   return totalCartCount;
 };
 
-export const isItemAlreadyInCart = (state: CartState, productId: number) => {
-  return createSelector(getCartItems, (items) => {
-    return items.filter((item) => item.productId === productId).length > 0;
-  })(state);
-};
+export const getIsItemAlreadyInCart = (productId: number) =>
+  createSelector(
+    getCartItems,
+    (items) => items.filter((item) => item.id === productId).length > 0
+  );
