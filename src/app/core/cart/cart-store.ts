@@ -23,7 +23,7 @@ export class CartStore extends Store<CartState> {
     this.logService.log("[Cart] Update Item", cartItemToUpdate);
 
     const newCartItems = this.state.cartItems.map(i =>
-      i.productId === cartItemToUpdate.productId ? cartItemToUpdate : i
+      i.id === cartItemToUpdate.id ? cartItemToUpdate : i
     );
 
     this.setState({
@@ -36,7 +36,7 @@ export class CartStore extends Store<CartState> {
     this.logService.log("[Cart] Remove Item", cartItemToRemove);
 
     const newCartItems = this.state.cartItems.filter(
-      i => i.productId !== cartItemToRemove.productId
+      i => i.id !== cartItemToRemove.id
     );
 
     this.setState({

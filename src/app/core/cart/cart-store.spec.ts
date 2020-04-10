@@ -24,7 +24,7 @@ describe('CartStore', () => {
     expect(currentState.cartItems.length).toBe(0);
 
     const cartItem: CartItem = {
-      productId: 1,
+      id: 1,
       imgUrl: 'img/apple',
       price: 2,
       quantity: 10,
