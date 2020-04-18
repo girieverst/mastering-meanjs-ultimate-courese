@@ -1,18 +1,13 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  Input
-} from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService } from '../../core/auth/auth.service';
-import { BehaviorSubject } from 'rxjs';
+import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { BehaviorSubject } from "rxjs";
+import { AuthService } from "../../core/auth/auth.service";
 
 @Component({
-  selector: 'pm-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  selector: "pm-login",
+  templateUrl: "./login.component.html",
+  styleUrls: ["./login.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent implements OnInit {
   email: string;
@@ -21,14 +16,15 @@ export class LoginComponent implements OnInit {
   constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit() {
-    this.error = new BehaviorSubject('');
+    this.error = new BehaviorSubject("");
   }
 
   login() {
-    this.setError('');
-    this.authService
-      .login(this.email, this.password)
-      .subscribe(s => this.router.navigate(['']), e => this.setError(e));
+    this.setError("");
+    this.authService.login(this.email, this.password).subscribe(
+      (redirectUrl) => this.router.navigate([redirectUrl]),
+      (e) => this.setError(e)
+    );
   }
 
   private setError(msg: any) {
