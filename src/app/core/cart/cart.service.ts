@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { LogService } from "@core/log.service";
 import { Product } from "@core/products/product";
 import { of } from "rxjs";
+import { CartItem } from "./cart-item";
 import { CartStore } from "./cart-store";
 
 export const ALLOWED_PRODUCT_QUANTITIES = Array.from(
@@ -24,5 +25,22 @@ export class CartService {
     };
     this.cartStore.addCartItem(cartItemToAdd);
     return of(cartItemToAdd);
+  }
+
+  updateCartItem(cartItemToUpdate: CartItem) {
+    cartItemToUpdate = {
+      ...cartItemToUpdate,
+      itemTotal: cartItemToUpdate.price * cartItemToUpdate.quantity,
+    };
+
+    this.cartStore.updateCartItem(cartItemToUpdate);
+
+    return of(cartItemToUpdate);
+  }
+
+  removeCartItem(itemToRemove: CartItem) {
+    this.cartStore.removeCartItem(itemToRemove);
+
+    return of(itemToRemove);
   }
 }
