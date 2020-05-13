@@ -1,11 +1,10 @@
-import { Injectable } from '@angular/core';
-import { of, Subject, throwError, EMPTY } from 'rxjs';
-import { switchMap, catchError } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
-
-import { User } from '../user';
-import { TokenStorageService } from './token-storage.service';
-import { LogService } from '@core/log.service';
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { LogService } from "@core/log.service";
+import { BehaviorSubject, EMPTY, of, throwError } from "rxjs";
+import { catchError, switchMap } from "rxjs/operators";
+import { User } from "../user";
+import { TokenStorageService } from "./token-storage.service";
 
 interface UserDto {
   user: User;
@@ -13,11 +12,12 @@ interface UserDto {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class AuthService {
-  private user$ = new Subject<User>();
-  private apiUrl = '/api/auth/';
+  private user$ = new BehaviorSubject<User>(null);
+  private apiUrl = "/api/auth/";
+  private redirectUrlAfterLogin = "";
 
   constructor(
     private httpClient: HttpClient,
@@ -25,9 +25,17 @@ export class AuthService {
     private logService: LogService
   ) {}
 
+  get isUserLoggedIn() {
+    return this.user$.value !== null;
+  }
+
+  set redirectUrl(url: string) {
+    this.redirectUrlAfterLogin = url;
+  }
+
   login(email: string, password: string) {
     const loginCredentials = { email, password };
-    console.log('login credentials', loginCredentials);
+    console.log("login credentials", loginCredentials);
 
     return this.httpClient
       .post<UserDto>(`${this.apiUrl}login`, loginCredentials)
@@ -36,9 +44,9 @@ export class AuthService {
           this.setUser(user);
           this.tokenStorage.setToken(token);
           console.log(`user found`, user);
-          return of(user);
+          return of(this.redirectUrlAfterLogin);
         }),
-        catchError(e => {
+        catchError((e) => {
           this.logService.log(`Server Error Occurred: ${e.error.message} `, e);
           return throwError(
             `Your login details could not be verified. Please try again`
@@ -53,7 +61,7 @@ export class AuthService {
 
     this.tokenStorage.removeToken();
     this.setUser(null);
-    console.log('user did logout successfull');
+    console.log("user did logout successfull");
   }
 
   get user() {
@@ -68,7 +76,7 @@ export class AuthService {
         console.log(`user registered successfully`, user);
         return of(user);
       }),
-      catchError(e => {
+      catchError((e) => {
         console.log(`server error occured`, e);
         return throwError(`Registration failed please contact to admin`);
       })
@@ -87,7 +95,7 @@ export class AuthService {
         console.log(`user found`, user);
         return of(user);
       }),
-      catchError(e => {
+      catchError((e) => {
         console.log(
           `Your login details could not be verified. Please try again`,
           e
