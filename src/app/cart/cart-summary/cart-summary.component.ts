@@ -18,7 +18,7 @@ export class CartSummaryComponent implements OnInit {
   cartSubTotal: Observable<number>;
   cartItemsCount: Observable<number>;
   shippingCost: Observable<number>;
-  estimattedTax: Observable<number>;
+  estimatedTax: Observable<number>;
   orderTotal: Observable<number>;
 
   constructor(private cartStore: CartStore) {}
@@ -27,7 +27,7 @@ export class CartSummaryComponent implements OnInit {
     this.cartSubTotal = this.cartStore.select(getCartSubTotal);
     this.cartItemsCount = this.cartStore.select(getCartItemsCount);
     this.shippingCost = this.cartStore.select(getShippingCost);
-    this.estimattedTax = this.cartStore.select(getEstimatedTax);
+    this.estimatedTax = this.cartStore.select(getEstimatedTax);
     this.orderTotal = this.cartStore.select(getOrderTotal);
   }
 }

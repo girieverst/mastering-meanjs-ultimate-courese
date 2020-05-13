@@ -35,11 +35,10 @@ export const getEstimatedTax = createSelector(
   (subTotal) => subTotal * TAX
 );
 
-export const getOrderTotal = () =>
-  createSelector(
-    getCartSubTotal,
-    getShippingCost,
-    getEstimatedTax,
-    (cartSubTotal, shippingCost, estimatedTax) =>
-      cartSubTotal + shippingCost + estimatedTax
-  );
+export const getOrderTotal = createSelector(
+  getCartSubTotal,
+  getShippingCost,
+  getEstimatedTax,
+  (cartSubTotal, shippingCost, estimatedTax) =>
+    cartSubTotal + shippingCost + estimatedTax
+);
