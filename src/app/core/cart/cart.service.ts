@@ -4,7 +4,6 @@ import { Product } from "@core/products/product";
 import { of } from "rxjs";
 import { CartItem } from "./cart-item";
 import { CartStore } from "./cart-store";
-import { CartItem } from './cart-item';
 
 export const ALLOWED_PRODUCT_QUANTITIES = Array.from(
   { length: 30 },

@@ -4,6 +4,7 @@ import {
   Input,
   OnInit,
 } from "@angular/core";
+import { MatDialog } from "@angular/material";
 import { getIsItemAlreadyInCart } from "@core/cart/cart-selector";
 import { CartStore } from "@core/cart/cart-store";
 import {
@@ -12,6 +13,7 @@ import {
 } from "@core/cart/cart.service";
 import { Product } from "@core/products/product";
 import { Observable } from "rxjs";
+import { AddToCartDialogComponent } from "../add-to-cart-dialog/add-to-cart-dialog.component";
 
 @Component({
   selector: "pm-add-to-cart",
@@ -25,7 +27,11 @@ export class AddToCartComponent implements OnInit {
   quantity: number;
   isItemAlreadyInCart: Observable<boolean>;
 
-  constructor(private cartStore: CartStore, private cartService: CartService) {}
+  constructor(
+    private cartStore: CartStore,
+    private cartService: CartService,
+    private matDialog: MatDialog
+  ) {}
 
   ngOnInit() {
     this.availableQuantities = ALLOWED_PRODUCT_QUANTITIES;
@@ -38,6 +44,15 @@ export class AddToCartComponent implements OnInit {
   addItemToCart() {
     this.cartService
       .addToCart(this.product, this.quantity)
-      .subscribe((cartItem) => console.log("added to cart", cartItem));
+      .subscribe((cartItem) => this.openDialog(cartItem));
+  }
+
+  openDialog(cartItem) {
+    this.matDialog.open(AddToCartDialogComponent, {
+      width: "350px",
+      height: "250px",
+      data: { cartItem },
+      disableClose: true,
+    });
   }
 }
