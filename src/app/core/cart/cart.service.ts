@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { LogService } from "@core/log.service";
 import { Product } from "@core/products/product";
 import { of } from "rxjs";
+import { CartItem } from "./cart-item";
 import { CartStore } from "./cart-store";
 import { CartItem } from './cart-item';
 
@@ -27,11 +28,10 @@ export class CartService {
     return of(cartItemToAdd);
   }
 
-  
   updateCartItem(cartItemToUpdate: CartItem) {
     cartItemToUpdate = {
       ...cartItemToUpdate,
-      itemTotal: cartItemToUpdate.price * cartItemToUpdate.quantity
+      itemTotal: cartItemToUpdate.price * cartItemToUpdate.quantity,
     };
 
     this.cartStore.updateCartItem(cartItemToUpdate);
@@ -43,9 +43,5 @@ export class CartService {
     this.cartStore.removeCartItem(itemToRemove);
 
     return of(itemToRemove);
-  }
-
-  clearCart() {
-    this.cartStore.clearCart();
   }
 }

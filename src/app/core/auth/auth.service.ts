@@ -25,12 +25,12 @@ export class AuthService {
     private logService: LogService
   ) {}
 
-  set redirectUrl(url: string) {
-    this.redirectUrlAfterLogin = url;
+  get isUserLoggedIn() {
+    return this.user$.value !== null;
   }
 
-  get isLoggedIn() {
-    return this.user$.value != null;
+  set redirectUrl(url: string) {
+    this.redirectUrlAfterLogin = url;
   }
 
   login(email: string, password: string) {
