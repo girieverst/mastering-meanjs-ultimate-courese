@@ -8,7 +8,8 @@ const userController = require('../controllers/user.controller');
 
 const localLogin = new LocalStrategy(
   {
-    usernameFeild: 'email'
+    usernameFeild: 'email',
+    password:'password',
   },
   async (email, password, done) => {
     const user = userController.getUserByEmailIdAndPassword(email, password);
