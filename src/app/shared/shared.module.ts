@@ -8,7 +8,6 @@ import { AddToCartComponent } from "./cart/add-to-cart/add-to-cart.component";
 import { CartItemsCountComponent } from "./cart/cart-items-count/cart-items-count.component";
 import { PmMaterialModule } from "./material-module";
 import { SharedRoutingModule } from "./shared-routing.module";
-import { AddToCartDialogComponent } from './cart/add-to-cart-dialog/add-to-cart-dialog.component';
 
 @NgModule({
   declarations: [
