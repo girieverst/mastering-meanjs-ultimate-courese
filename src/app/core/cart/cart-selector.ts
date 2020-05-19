@@ -39,6 +39,6 @@ export const getOrderTotal = createSelector(
   getCartSubTotal,
   getShippingCost,
   getEstimatedTax,
-  (cartSubTotal, shippingCost, estimatedTax) =>
+  (cartSubTotal, shippingCost, estimatedTax): number =>
     cartSubTotal + shippingCost + estimatedTax
 );

@@ -43,4 +43,8 @@ export class CartService {
 
     return of(itemToRemove);
   }
+
+  clearCart() {
+    this.cartStore.clearCart();
+  }
 }
