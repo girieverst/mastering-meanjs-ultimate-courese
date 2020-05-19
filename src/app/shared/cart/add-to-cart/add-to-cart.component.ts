@@ -5,6 +5,7 @@ import {
   OnInit,
 } from "@angular/core";
 import { MatDialog } from "@angular/material";
+import { CartItem } from "@core/cart/cart-item";
 import { getIsItemAlreadyInCart } from "@core/cart/cart-selector";
 import { CartStore } from "@core/cart/cart-store";
 import {
@@ -47,7 +48,7 @@ export class AddToCartComponent implements OnInit {
       .subscribe((cartItem) => this.openDialog(cartItem));
   }
 
-  openDialog(cartItem) {
+  openDialog(cartItem: CartItem) {
     this.matDialog.open(AddToCartDialogComponent, {
       width: "350px",
       height: "250px",
