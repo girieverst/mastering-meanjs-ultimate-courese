@@ -90,9 +90,10 @@ export class AuthService {
     }
 
     return this.httpClient.get<any>(`${this.apiUrl}findme`).pipe(
-      switchMap(({ user }) => {
+      switchMap(({ user, token }) => {
         this.setUser(user);
-        console.log(`user found`, user);
+        this.tokenStorage.setToken(token);
+        console.log(`user found from server:`, user);
         return of(user);
       }),
       catchError((e) => {
