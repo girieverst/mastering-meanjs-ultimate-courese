@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { getOrderTotal } from "@core/cart/cart-selector";
 import { CartStore } from "@core/cart/cart-store";
+import { OrderService } from "@core/orders/order.service";
 import { Subscription } from "rxjs";
 import { CartService } from "../../core/cart/cart.service";
 
@@ -21,7 +22,8 @@ export class PaypalCheckoutComponent implements OnInit {
   constructor(
     private cartService: CartService,
     private router: Router,
-    private cartStore: CartStore
+    private cartStore: CartStore,
+    private orderService: OrderService
   ) {}
 
   ngOnInit() {
@@ -81,8 +83,13 @@ export class PaypalCheckoutComponent implements OnInit {
     onAuthorize: (data, actions) => {
       return actions.payment.execute().then((payment) => {
         console.log("The payment was succeeded", payment);
-        this.cartService.clearCart();
-        this.router.navigate(["products"]);
+        this.orderService
+          .submitOrder(payment.cart, payment.id, this.orderTotalToCharge)
+          .subscribe((order) => {
+            console.log(`Redirect to Thank you page pending`, order);
+            this.cartService.clearCart();
+            this.router.navigate(["products"]);
+          });
       });
     },
     onCancel: (data) => {

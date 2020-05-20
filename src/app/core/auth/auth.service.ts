@@ -25,6 +25,10 @@ export class AuthService {
     private logService: LogService
   ) {}
 
+  get loggedInUser() {
+    return this.user$.value;
+  }
+
   get isUserLoggedIn() {
     return this.user$.value !== null;
   }
@@ -107,7 +111,9 @@ export class AuthService {
     );
   }
 
-  private setUser(user) {
-    this.user$.next(user);
+  private setUser(user: any) {
+    const newUser = { ...user, id: user._id };
+    this.user$.next(newUser);
+    console.log(`Logged In User`, newUser);
   }
 }
