@@ -22,6 +22,10 @@ const routes: Routes = [
     loadChildren: "./cart/cart.module#CartModule",
     canActivate: [AuthGuardService],
   },
+  {
+    path: "orders",
+    loadChildren: "./orders/orders.module#OrdersModule",
+  },
 ];
 
 @NgModule({

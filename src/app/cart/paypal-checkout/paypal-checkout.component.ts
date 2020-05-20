@@ -77,7 +77,7 @@ export class PaypalCheckoutComponent implements OnInit {
           .subscribe((order) => {
             console.log(`Redirect to Thank you page pending`, order);
             this.cartService.clearCart();
-            this.router.navigate(["products"]);
+            this.router.navigate(["orders/success"]);
           });
       });
     },
