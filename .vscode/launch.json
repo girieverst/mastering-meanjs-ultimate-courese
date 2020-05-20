@@ -8,11 +8,13 @@
             "type": "node",
             "request": "launch",
             "name": "Server",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}\\server\\index.js",
-            "preLaunchTask": "tsc: build - tsconfig.json"
+            "port": 9229,
+            "cwd": "${workspaceFolder}",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run-script",
+                "server:debug"
+            ]
         }
     ]
 }
