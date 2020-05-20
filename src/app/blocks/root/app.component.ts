@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { Subscription } from "rxjs";
+import { merge, Observable } from "rxjs";
 import { AuthService } from "../../core/auth/auth.service";
 import { User } from "../../core/user";
 
@@ -10,25 +10,18 @@ import { User } from "../../core/user";
   styleUrls: ["./app.component.scss"],
 })
 export class AppComponent implements OnDestroy, OnInit {
-  user: User;
-  userSubscription: Subscription;
+  user$: Observable<User>;
 
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    this.userSubscription = this.authService
-      .findMe()
-      .subscribe((user) => (this.user = user));
+    this.user$ = merge(this.authService.findMe(), this.authService.user);
   }
 
   logout() {
     this.authService.logout();
-    this.router.navigate(["/"]);
+    this.router.navigate(["/auth"]);
   }
 
-  ngOnDestroy(): void {
-    if (this.userSubscription) {
-      this.userSubscription.unsubscribe();
-    }
-  }
+  ngOnDestroy(): void {}
 }
