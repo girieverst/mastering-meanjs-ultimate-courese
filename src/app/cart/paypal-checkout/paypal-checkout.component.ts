@@ -1,10 +1,11 @@
 declare let paypal: any;
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { getOrderTotal } from "@core/cart/cart-selector";
+import { CartItem } from "@core/cart/cart-item";
+import { getCartItems, getOrderTotal } from "@core/cart/cart-selector";
 import { CartStore } from "@core/cart/cart-store";
 import { OrderService } from "@core/orders/order.service";
-import { Subscription } from "rxjs";
+import { combineLatest, Subscription } from "rxjs";
 import { CartService } from "../../core/cart/cart.service";
 
 @Component({
@@ -16,8 +17,9 @@ import { CartService } from "../../core/cart/cart.service";
 export class PaypalCheckoutComponent implements OnInit {
   addScript: boolean = false;
   paypalLoad: boolean = true;
-  orderTotalToCharge: number = 0;
+  orderTotal: number = 0;
   orderTotalSubscription: Subscription;
+  cartItems: CartItem[];
 
   constructor(
     private cartService: CartService,
@@ -27,12 +29,15 @@ export class PaypalCheckoutComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.orderTotalSubscription = this.cartStore
-      .select(getOrderTotal)
-      .subscribe((orderTotal: number) => {
-        console.log("getting order total is: ", orderTotal);
-        this.orderTotalToCharge = orderTotal;
-      });
+    this.orderTotalSubscription = combineLatest(
+      this.cartStore.select(getOrderTotal),
+      this.cartStore.select(getCartItems)
+    ).subscribe(([orderTotal, cartItems]) => {
+      console.log("getting order total is: ", orderTotal);
+      console.log("getting order total is: ", cartItems);
+      this.orderTotal = orderTotal;
+      this.cartItems = cartItems as CartItem[];
+    });
   }
 
   ngOnDestroy() {
@@ -75,16 +80,18 @@ export class PaypalCheckoutComponent implements OnInit {
       return actions.payment.create({
         payment: {
           transactions: [
-            { amount: { total: this.orderTotalToCharge, currency: "USD" } },
+            { amount: { total: this.orderTotal, currency: "USD" } },
           ],
         },
       });
     },
     onAuthorize: (data, actions) => {
       return actions.payment.execute().then((payment) => {
+        const { cart: cartId, id: paymentId } = payment;
+        const { orderTotal, cartItems } = this;
         console.log("The payment was succeeded", payment);
         this.orderService
-          .submitOrder(payment.cart, payment.id, this.orderTotalToCharge)
+          .submitOrder({ cartId, cartItems, orderTotal, paymentId })
           .subscribe((order) => {
             console.log(`Redirect to Thank you page pending`, order);
             this.cartService.clearCart();
