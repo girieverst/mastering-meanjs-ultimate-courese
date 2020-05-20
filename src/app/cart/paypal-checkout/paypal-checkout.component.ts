@@ -38,30 +38,12 @@ export class PaypalCheckoutComponent implements OnInit {
       this.orderTotal = orderTotal;
       this.cartItems = cartItems as CartItem[];
     });
+    paypal.Button.render(this.paypalConfig, "#paypal-button-container");
   }
 
   ngOnDestroy() {
     if (this.orderTotalSubscription) {
       this.orderTotalSubscription.unsubscribe();
-    }
-  }
-
-  private addPaypalScript() {
-    this.addScript = true;
-    return new Promise((resolve) => {
-      let scripttagElement = document.createElement("script");
-      scripttagElement.src = "https://www.paypalobjects.com/api/checkout.js";
-      scripttagElement.onload = resolve;
-      document.body.appendChild(scripttagElement);
-    });
-  }
-
-  ngAfterViewChecked(): void {
-    if (!this.addScript) {
-      this.addPaypalScript().then(() => {
-        paypal.Button.render(this.paypalConfig, "#paypal-button-container");
-        this.paypalLoad = false;
-      });
     }
   }
 
