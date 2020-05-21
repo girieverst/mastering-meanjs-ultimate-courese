@@ -1,3 +1,49 @@
-<p>
-  order-success works!
-</p>
+<mat-card class="os-container">
+  <mat-card-header>
+    <mat-card-title>Thank you, your order has been placed.</mat-card-title>
+    <mat-card-subtitle> Please check your email for order confirmation and detailed delivery information.
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-list>
+      <div mat-subheader><strong>Order Number:</strong> {{orderNumber}}</div>
+      <mat-list-item *ngFor="let item of items">
+        <mat-icon mat-list-icon>folder</mat-icon>
+        <p> {{item.name}} will be shipped to <strong>{{userName}}</strong> by <a [routerLink]="['../../products']">
+            ProductMart.com </a>
+
+          <strong>Delivery:</strong>
+          <span>{{deliveryDate|date}}</span>
+
+        </p>
+      </mat-list-item>
+
+    </mat-list>
+  </mat-card-content>
+  <mat-card-actions>
+
+
+    <button mat-raised-button color="primary" [routerLink]="['../../products']">
+      <mat-icon> shopping </mat-icon>
+      <span>
+        Continue Shopping
+      </span>
+    </button>
+
+
+
+    <button [fxHide.xs]="true" mat-raised-button color="accent" [routerLink]="['../products']">
+      <mat-icon> launch </mat-icon>
+      <span>
+        Review your order
+      </span>
+    </button>
+
+
+    <button [fxShow.xs]="true" [fxHide]="true" mat-raised-button color="accent" [routerLink]="['../products']">
+      <mat-icon> launch </mat-icon>
+    </button>
+
+
+  </mat-card-actions>
+</mat-card>
