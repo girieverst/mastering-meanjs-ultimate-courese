@@ -4,8 +4,9 @@ import { AuthService } from "@core/auth/auth.service";
 import { CartItem } from "@core/cart/cart-item";
 import { LogService } from "@core/log.service";
 import { of, throwError } from "rxjs";
-import { catchError, switchMap } from "rxjs/operators";
+import { catchError, switchMap, tap } from "rxjs/operators";
 import { Order } from "./order";
+import { OrderStore } from "./order.store";
 
 @Injectable({
   providedIn: "root",
@@ -16,7 +17,8 @@ export class OrderService {
   constructor(
     private httpClient: HttpClient,
     private authService: AuthService,
-    private logService: LogService
+    private logService: LogService,
+    private orderStore: OrderStore
   ) {}
 
   submitOrder({
@@ -46,9 +48,26 @@ export class OrderService {
     );
 
     return this.httpClient.post(`${this.apiUrl}submit`, order).pipe(
-      switchMap((newOrder) => {
-        this.logService.log("Order submitted successfully", newOrder);
-        return of(newOrder);
+      tap((order: any) => {
+        this.logService.log("Order created successfully", order);
+      }),
+      switchMap((order: any) => of(order._id)),
+      catchError((e) => {
+        this.logService.log(`Server Error Occurred: ${e.error.message} `, e);
+        return throwError(
+          `Your Order could not be submitted now please try again`
+        );
+      })
+    );
+  }
+
+  getOrder(orderId: string) {
+    return this.httpClient.get(`${this.apiUrl}${orderId}`).pipe(
+      switchMap((order: any) => {
+        const createdOrder = { ...order, orderId: order._id };
+        this.logService.log("Order created successfully", createdOrder);
+        this.orderStore.addOrder(createdOrder);
+        return of(createdOrder.orderId);
       }),
       catchError((e) => {
         this.logService.log(`Server Error Occurred: ${e.error.message} `, e);

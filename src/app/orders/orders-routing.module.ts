@@ -4,7 +4,7 @@ import { OrderSuccessComponent } from './order-success/order-success.component';
 
 const routes: Routes = [
   {
-    path: "success",
+    path: "success/:id",
     component: OrderSuccessComponent,
   },
 ];

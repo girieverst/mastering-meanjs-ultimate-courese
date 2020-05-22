@@ -40,5 +40,5 @@ export const getOrderTotal = createSelector(
   getShippingCost,
   getEstimatedTax,
   (cartSubTotal, shippingCost, estimatedTax): number =>
-    cartSubTotal + shippingCost + estimatedTax
+    Math.round((cartSubTotal + shippingCost + estimatedTax) * 100) / 100
 );

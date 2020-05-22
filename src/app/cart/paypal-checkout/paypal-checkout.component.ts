@@ -34,10 +34,11 @@ export class PaypalCheckoutComponent implements OnInit {
       this.cartStore.select(getCartItems)
     ).subscribe(([orderTotal, cartItems]) => {
       console.log("getting order total is: ", orderTotal);
-      console.log("getting order total is: ", cartItems);
+      console.log("getting cart items: ", cartItems);
       this.orderTotal = orderTotal;
       this.cartItems = cartItems as CartItem[];
     });
+
     paypal.Button.render(this.paypalConfig, "#paypal-button-container");
   }
 
@@ -74,17 +75,17 @@ export class PaypalCheckoutComponent implements OnInit {
         console.log("The payment was succeeded", payment);
         this.orderService
           .submitOrder({ cartId, cartItems, orderTotal, paymentId })
-          .subscribe((order) => {
-            console.log(`Redirect to Thank you page pending`, order);
+          .subscribe((orderId) => {
+            console.log(`Redirect to Thank you page pending`, orderId);
             this.cartService.clearCart();
-            this.router.navigate(["orders/success"]);
+            this.router.navigate(["orders/success", orderId]);
           });
       });
     },
-    onCancel: (data) => {
+    onCancel: (data: any) => {
       console.log("The payment was cancelled", data);
     },
-    onError: (data) => {
+    onError: (data: any) => {
       console.log("Payment Error", data);
     },
   };
