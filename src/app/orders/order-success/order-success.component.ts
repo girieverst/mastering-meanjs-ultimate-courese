@@ -1,76 +1,38 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  OnDestroy,
-  OnInit,
+  EventEmitter,
+  Input,
+  Output,
 } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
-import { AuthService } from "@core/auth/auth.service";
 import { CartItem } from "@core/cart/cart-item";
 import { Order } from "@core/orders/order";
-import { getOrderById } from "@core/orders/order.selector";
-import { OrderService } from "@core/orders/order.service";
-import { OrderStore } from "@core/orders/order.store";
-import { Observable, Subscription } from "rxjs";
-import { map, switchMap } from "rxjs/operators";
+import { User } from "@core/user";
 
 @Component({
   selector: "pm-order-success",
   templateUrl: "./order-success.component.html",
   styleUrls: ["./order-success.component.scss"],
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OrderSuccessComponent implements OnInit, OnDestroy {
+export class OrderSuccessComponent {
+  @Input()
   order: Order;
-  orderSubscription: Subscription;
-  orderId$: Observable<string>;
-  fetchOrderFromServer$: Observable<string>;
-  fetchOrderFromStore: Observable<Order>;
+  @Input()
+  user: User;
 
-  constructor(
-    private route: ActivatedRoute,
-    private orderStore: OrderStore,
-    private orderService: OrderService,
-    private authService: AuthService,
-    private router: Router
-  ) {
-    this.orderId$ = this.route.params.pipe(map((params) => params.id));
+  @Output()
+  routeToShoppingPage = new EventEmitter();
 
-    this.fetchOrderFromServer$ = this.orderId$.pipe(
-      switchMap((orderId) => this.orderService.getOrder(orderId))
-    );
-
-    this.fetchOrderFromStore = this.fetchOrderFromServer$.pipe(
-      switchMap((orderId: string) =>
-        this.orderStore.select(getOrderById(orderId))
-      )
-    );
-  }
-
-  ngOnInit() {
-    this.orderSubscription = this.fetchOrderFromStore.subscribe((order: Order) =>
-      this.handleOrder(order)
-    );
-  }
-  ngOnDestroy(): void {
-    if (this.orderSubscription) {
-      this.orderSubscription.unsubscribe();
-    }
-  }
-
-  handleOrder(order: Order) {
-    this.order = order;
-    if (!this.order) {
-      this.router.navigate(["../products"], { relativeTo: this.route });
-    }
-  }
+  @Output()
+  routeToOrderDetailPage = new EventEmitter<string>();
 
   get deliveryDate() {
     return this.order.deliveryDate;
   }
 
   get userName() {
-    return this.authService.loggedInUser.fullname;
+    return this.user.fullname;
   }
 
   get items(): CartItem[] {

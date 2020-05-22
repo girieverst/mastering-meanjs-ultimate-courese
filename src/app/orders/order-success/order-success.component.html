@@ -1,4 +1,4 @@
-<mat-card  class="os-container">
+<mat-card *ngIf="order" class="os-container">
   <mat-card-header>
     <mat-card-title class="mat-title">Thank you, your order has been placed.</mat-card-title>
     <mat-card-subtitle class="mat-headline"> Please check your email for order confirmation and detailed delivery information.
@@ -10,7 +10,7 @@
       <mat-list-item *ngFor="let item of items">
         <mat-icon mat-list-icon>folder</mat-icon>
         <p class="mat-typography"> 
-          {{item.name}} will be shipped to <strong>{{userName}}</strong> by <a [routerLink]="['../../products']">
+          {{item.name}} will be shipped to <strong>{{userName}}</strong> by <a (click)="routeToShoppingPage.emit()">
             ProductMart.com </a>
 
           <strong>Delivery:</strong>
@@ -24,7 +24,7 @@
   <mat-card-actions>
 
 
-    <button mat-raised-button color="primary" [routerLink]="['../../../products']">
+    <button mat-raised-button color="primary" (click)="routeToShoppingPage.emit()">
       <mat-icon> shopping </mat-icon>
       <span>
         Continue Shopping
@@ -33,7 +33,7 @@
 
 
 
-    <button [fxHide.xs]="true" mat-raised-button color="accent" [routerLink]="['../products']">
+    <button [fxHide.xs]="true" mat-raised-button color="accent" (click)="routeToOrderDetailPage.emit(order.orderId)">
       <mat-icon> launch </mat-icon>
       <span>
         Review your order
@@ -41,7 +41,7 @@
     </button>
 
 
-    <button [fxShow.xs]="true" [fxHide]="true" mat-raised-button color="accent" [routerLink]="['../products']">
+    <button [fxShow.xs]="true" [fxHide]="true" mat-raised-button color="accent" (click)="routeToOrderDetailPage.emit(order.orderId)">
       <mat-icon> launch </mat-icon>
     </button>
 

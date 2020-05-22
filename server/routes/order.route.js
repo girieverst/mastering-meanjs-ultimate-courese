@@ -31,8 +31,6 @@ async function submitOrder(req, res, next) {
   console.log(`Creating order`, orderToSave);
   const order = await orderController.submitOrder(orderToSave);
   res.json(order);
-
-  next();
 }
 
 async function getOrderById(req, res, next) {

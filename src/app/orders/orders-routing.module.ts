@@ -1,16 +1,16 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { OrderSuccessComponent } from './order-success/order-success.component';
+import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
+import { OrderSuccessPageComponent } from "./order-success-page/order-success-page.component";
 
 const routes: Routes = [
   {
     path: "success/:id",
-    component: OrderSuccessComponent,
+    component: OrderSuccessPageComponent,
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class OrdersRoutingModule { }
+export class OrdersRoutingModule {}
