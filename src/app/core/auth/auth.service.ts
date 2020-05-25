@@ -33,6 +33,13 @@ export class AuthService {
     return this.user$.value !== null;
   }
 
+  get userId$() {
+    if (!this.loggedInUser) {
+      return EMPTY;
+    }
+    return this.user$.pipe(switchMap((u) => (u ? of(u.id) : EMPTY)));
+  }
+
   set redirectUrl(url: string) {
     this.redirectUrlAfterLogin = url;
   }

@@ -10,12 +10,12 @@ import { Order } from "@core/orders/order";
 import { User } from "@core/user";
 
 @Component({
-  selector: "pm-order-success",
-  templateUrl: "./order-success.component.html",
-  styleUrls: ["./order-success.component.scss"],
+  selector: "pm-thank-you",
+  templateUrl: "./thank-you.component.html",
+  styleUrls: ["./thank-you.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OrderSuccessComponent {
+export class ThankyouComponent {
   @Input()
   order: Order;
   @Input()

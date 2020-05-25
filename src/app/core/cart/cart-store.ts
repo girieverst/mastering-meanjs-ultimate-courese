@@ -13,6 +13,7 @@ export class CartStore extends Store<CartState> {
   addCartItem = (cartItemToAdd: CartItem) => {
     this.logService.log("[Cart] Add Item", cartItemToAdd);
 
+
     this.setState({
       ...this.state,
       cartItems: [].concat(this.state.cartItems, cartItemToAdd)

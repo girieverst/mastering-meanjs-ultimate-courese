@@ -16,7 +16,6 @@ import { map, switchMap } from "rxjs/operators";
 @Component({
   selector: "pm-order-success-page",
   templateUrl: "./order-success-page.component.html",
-  styleUrls: ["./order-success-page.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrderSuccessPageComponent implements OnInit {

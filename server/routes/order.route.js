@@ -26,6 +26,9 @@ router.get(
   asyncHandler(getAllOrders)
 );
 
+// localhost:4050/api/orders/userid/123
+router.get("/userid/:userId", asyncHandler(getOrdersByUserId));
+
 async function submitOrder(req, res, next) {
   const orderToSave = req.body;
   console.log(`Creating order`, orderToSave);
@@ -36,15 +39,20 @@ async function submitOrder(req, res, next) {
 async function getOrderById(req, res, next) {
   const order = await orderController.getOrderById(req.params.orderId);
   res.json(order);
-
-  next();
 }
 
 async function getAllOrders(req, res, next) {
   const orders = await orderController.getAllOrders();
   res.json(orders);
+}
 
-  next();
+async function getOrdersByUserId(req, res, next) {
+  const orders = await orderController.getOrderByUserId(req.params.userId);
+  const mappedOrder = orders.map((order) => ({
+    ...order.toObject(),
+    orderId: order._id,
+  }));
+  res.json(mappedOrder);
 }
 
 module.exports = router;

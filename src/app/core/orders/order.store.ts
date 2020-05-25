@@ -19,6 +19,15 @@ export class OrderStore extends Store<OrderState> {
     });
   };
 
+  addMultipleOrders = (ordersToAdd: Order[]) => {
+    this.logService.log("[Orders] Add Multiple Orders", ordersToAdd);
+    
+    this.setState({
+      ...this.state,
+      orders: [].concat(this.state.orders, ordersToAdd),
+    });
+  };
+
   clearOrder = () => {
     this.logService.log("[Orders] Clear");
 

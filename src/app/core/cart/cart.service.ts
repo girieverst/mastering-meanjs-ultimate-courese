@@ -24,6 +24,7 @@ export class CartService {
       itemTotal: product.price * quantity,
     };
     this.cartStore.addCartItem(cartItemToAdd);
+
     return of(cartItemToAdd);
   }
 

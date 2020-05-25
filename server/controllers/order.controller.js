@@ -8,9 +8,17 @@ async function submitOrder(order) {
 }
 
 async function getOrderById(orderId) {
-  console.log(`Searching order for`, orderId);
+  console.log(`Searching order for order`, orderId);
 
   return await Order.findById(orderId);
+}
+
+async function getOrderByUserId(userId) {
+  console.log(`Searching order for user`, userId);
+
+  return await Order.find({
+    userId,
+  });
 }
 
 async function getAllOrders() {
@@ -23,4 +31,5 @@ module.exports = {
   submitOrder,
   getOrderById,
   getAllOrders,
+  getOrderByUserId,
 };

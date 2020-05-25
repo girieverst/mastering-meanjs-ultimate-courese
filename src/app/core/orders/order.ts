@@ -1,7 +1,9 @@
 import { CartItem } from "@core/cart/cart-item";
 
 export class Order {
-  public orderId = "";
+  orderId = "";
+  createdAt = "";
+
   constructor(
     public userId: string,
     public orderTotal: Number,

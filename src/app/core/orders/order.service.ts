@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { AuthService } from "@core/auth/auth.service";
 import { CartItem } from "@core/cart/cart-item";
 import { LogService } from "@core/log.service";
-import { of, throwError } from "rxjs";
+import { Observable, of, throwError } from "rxjs";
 import { catchError, switchMap, tap } from "rxjs/operators";
 import { Order } from "./order";
 import { OrderStore } from "./order.store";
@@ -72,9 +72,24 @@ export class OrderService {
       catchError((e) => {
         this.logService.log(`Server Error Occurred: ${e.error.message} `, e);
         return throwError(
-          `Your Order could not be submitted now please try again`
+          `Your Order could not be fetched now please try again`
         );
       })
     );
+  }
+
+  getOrdersByUserId(userId$: Observable<string>) {
+    return userId$.pipe(
+      switchMap((userId) =>
+        this.httpClient.get(`${this.apiUrl}/userid/${userId}`)
+      ),
+      tap((orders: Order[]) => this.orderStore.addMultipleOrders(orders)),
+      catchError((e) => this.onError(e))
+    );
+  }
+
+  private onError(e) {
+    this.logService.log(`Server Error Occurred`, e);
+    return throwError(`Server error occurred please try again`);
   }
 }
