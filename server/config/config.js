@@ -9,5 +9,8 @@ module.exports = {
     port: envVars.MONGO_PORT,
     isDebug: envVars.MONGOOSE_DEBUG
   },
-  jwtSecret : envVars.JWT_SECRET
+  jwtSecret : envVars.JWT_SECRET,
+  emailId : envVars.EMAIL_ID,
+  emailService: envVars.EMAIL_SERVICE,
+  emailPassword: envVars.EMAIL_PASSWORD,
 };

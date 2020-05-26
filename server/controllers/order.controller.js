@@ -1,10 +1,21 @@
 const Order = require("../models/order.model");
+const User = require("../models/user.model");
+
+const { sendEmail } = require("../services/email-sender.service");
 
 async function submitOrder(order) {
   // make a mogoose db call to save order in db
-  console.log(`saving order to db`, order);
+  console.log(`Creating Order`, order);
 
-  return await new Order(order).save();
+  const createdOrder = await new Order(order).save();
+
+  const user = await User.findById(createdOrder.userId);
+
+  sendEmail(createdOrder, user);
+
+  console.log(`Order created successfully for user ${user.id}`, createdOrder);
+
+  return createdOrder;
 }
 
 async function getOrderById(orderId) {
