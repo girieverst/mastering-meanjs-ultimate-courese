@@ -1,0 +1,61 @@
+<div class="container mat-typography" *ngIf="order">
+  <div class="od-header">
+    <span class="mat-headline">
+      Order Details
+    </span>
+
+    <br>
+    <span>
+      Ordered on {{order.createdAt | date}} | Order# {{order.orderId}}
+    </span>
+  </div>
+  <div class="od-container">
+    <div>
+      <span class="mat-subheading-2">
+        <strong> Shipping Address</strong>
+      </span>
+      <br>
+      <span class="mat-body">
+        {{order.shippingAddress}}
+      </span>
+
+    </div>
+    <div>
+      <span class="mat-subheading-2">
+        <strong> Payment Method</strong>
+      </span>
+      <br>
+      <span class="mat-body">
+        Paypal {{order.cartId}}
+      </span>
+
+    </div>
+    <div>
+      <span class="mat-subheading-2">
+        <strong> Order Summary</strong>
+      </span>
+      <br>
+      <div class="order-summary-container">
+        <div>Item(s) Subtotal: </div>
+        <div> {{order.orderSubTotal|currency}} </div>
+
+        <div>Shipping & Handling: </div>
+        <div> {{order.shippingCost|currency}} </div>
+
+        <div>Total before tax: </div>
+        <div> {{totalBeforeTax|currency}} </div>
+
+        <div>Estimated tax to be collected:</div>
+        <div> {{order.estimatedTax|currency}} </div>
+
+        <div><strong>Grand Total</strong></div>
+        <div><strong> {{order.orderTotal|currency}}</strong> </div>
+      </div>
+    </div>
+  </div>
+  <div class="od-item-list" *ngFor="let item of order.itemList">
+    <div class="od-item-list-a"> <img [src]="item.imgUrl" class="item-image" /></div>
+    <div> {{item.name}}</div>
+    <div class="od-item-list-c"> {{item.itemTotal|currency}}</div>
+</div>
+</div>

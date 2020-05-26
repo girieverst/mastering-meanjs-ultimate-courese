@@ -2,7 +2,14 @@ declare let paypal: any;
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { CartItem } from "@core/cart/cart-item";
-import { getCartItems, getOrderTotal } from "@core/cart/cart-selector";
+import {
+  getCartItems,
+  getCartItemsCount,
+  getCartSubTotal,
+  getEstimatedTax,
+  getOrderTotal,
+  getShippingCost,
+} from "@core/cart/cart-selector";
 import { CartStore } from "@core/cart/cart-store";
 import { OrderService } from "@core/orders/order.service";
 import { combineLatest, Subscription } from "rxjs";
@@ -20,6 +27,10 @@ export class PaypalCheckoutComponent implements OnInit {
   orderTotal: number = 0;
   orderTotalSubscription: Subscription;
   cartItems: CartItem[];
+  shippingCost: number;
+  itemsCount: number;
+  estimatedTax: number;
+  orderSubTotal: number;
 
   constructor(
     private cartService: CartService,
@@ -31,13 +42,30 @@ export class PaypalCheckoutComponent implements OnInit {
   ngOnInit() {
     this.orderTotalSubscription = combineLatest(
       this.cartStore.select(getOrderTotal),
-      this.cartStore.select(getCartItems)
-    ).subscribe(([orderTotal, cartItems]) => {
-      console.log("getting order total is: ", orderTotal);
-      console.log("getting cart items: ", cartItems);
-      this.orderTotal = orderTotal;
-      this.cartItems = cartItems as CartItem[];
-    });
+      this.cartStore.select(getCartItems),
+      this.cartStore.select(getShippingCost),
+      this.cartStore.select(getCartItemsCount),
+      this.cartStore.select(getEstimatedTax),
+      this.cartStore.select(getCartSubTotal)
+    ).subscribe(
+      ([
+        orderTotal,
+        cartItems,
+        shippingCost,
+        itemsCount,
+        estimatedTax,
+        orderSubTotal,
+      ]) => {
+        console.log("getting order total is: ", orderTotal);
+        console.log("getting cart items: ", cartItems);
+        this.orderTotal = orderTotal;
+        this.cartItems = cartItems as CartItem[];
+        this.shippingCost = shippingCost;
+        this.itemsCount = itemsCount;
+        this.estimatedTax = estimatedTax as number;
+        this.orderSubTotal = orderSubTotal as number;
+      }
+    );
 
     paypal.Button.render(this.paypalConfig, "#paypal-button-container");
   }
@@ -71,10 +99,18 @@ export class PaypalCheckoutComponent implements OnInit {
     onAuthorize: (data, actions) => {
       return actions.payment.execute().then((payment) => {
         const { cart: cartId, id: paymentId } = payment;
-        const { orderTotal, cartItems } = this;
+        const { orderTotal, cartItems,  shippingCost,
+          itemsCount,
+          estimatedTax,
+          orderSubTotal, } = this;
+
         console.log("The payment was succeeded", payment);
+        
         this.orderService
-          .submitOrder({ cartId, cartItems, orderTotal, paymentId })
+          .submitOrder({ cartId, cartItems, orderTotal, paymentId ,  shippingCost,
+            itemsCount,
+            estimatedTax,
+            orderSubTotal,})
           .subscribe((orderId) => {
             console.log(`Redirect to Thank you page pending`, orderId);
             this.cartService.clearCart();

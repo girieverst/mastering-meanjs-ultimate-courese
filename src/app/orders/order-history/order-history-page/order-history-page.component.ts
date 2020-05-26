@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
 import { AuthService } from "@core/auth/auth.service";
 import { Order } from "@core/orders/order";
 import { getOrders } from "@core/orders/order.selector";
@@ -21,12 +22,20 @@ export class OrderHistoryPageComponent implements OnInit {
   constructor(
     private orderService: OrderService,
     private authService: AuthService,
-    private orderStore: OrderStore
+    private orderStore: OrderStore,
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
     this.orderHistory$ = this.orderService
       .getOrdersByUserId(this.authService.userId$)
       .pipe(switchMap((_) => this.orderStore.select(getOrders)));
+  }
+
+  navigateOrderDetails(orderId: string) {
+    this.router.navigate(["../order-details", orderId], {
+      relativeTo: this.route,
+    });
   }
 }

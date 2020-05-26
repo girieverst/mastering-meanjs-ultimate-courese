@@ -1,6 +1,8 @@
 import { CommonModule } from "@angular/common";
-import { HTTP_INTERCEPTORS } from "@angular/common/http";
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { NgModule, Optional, SkipSelf } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { SharedModule } from "../shared/shared.module";
 import { CoreRoutingModule } from "./core-routing.module";
 import { AuthHeaderInterceptorService } from "./interceptors/auth-header-interceptor.service";
@@ -21,7 +23,14 @@ import { throwIfAlreadyLoaded } from "./utils/module-import-guard";
       multi: true,
     },
   ],
-  imports: [CommonModule, CoreRoutingModule, SharedModule],
+  imports: [
+    CommonModule,
+    CoreRoutingModule,
+    SharedModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
+  ],
 })
 export class CoreModule {
   constructor(@Optional() @SkipSelf() parentModule: CoreModule) {

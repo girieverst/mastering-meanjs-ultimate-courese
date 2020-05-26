@@ -1,4 +1,4 @@
-<div *ngFor="let order of orderHistory$ |async"> 
-  <pm-placed-order [order]="order"></pm-placed-order>
+<h1 class="mat-title">Your Orders</h1>
+<div *ngFor="let order of orderHistory$ |async">
+  <pm-placed-order [order]="order" (navigateOrderDetails)="navigateOrderDetails($event)"></pm-placed-order>
 </div>
-

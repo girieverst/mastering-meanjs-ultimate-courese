@@ -9,6 +9,22 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  orderSubTotal: {
+    type: Number,
+    required: true,
+  },
+  itemsCount: {
+    type: Number,
+    required: true,
+  },
+  shippingCost: {
+    type: Number,
+    required: true,
+  },
+  estimatedTax: {
+    type: Number,
+    required: true,
+  },
   deliveryDate: {
     type: Date,
     default: Date.now,
@@ -27,6 +43,7 @@ const UserSchema = new mongoose.Schema({
       itemTotal: "number",
     },
   ],
+
   cartId: {
     type: String,
     required: true,

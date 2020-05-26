@@ -21,7 +21,7 @@
 
                 </div>
                 <div class="po-item-header-e">
-                    <button mat-raised-button color="accent">Order Details</button>
+                    <button (click)="goToOrderDetailsPage()" mat-raised-button color="accent">Order Details</button>
                 </div>
             </div>
             <div class="po-item-header-row">
@@ -60,10 +60,10 @@
     </mat-card-content>
 </mat-card>
 
-<mat-card fxHide="true" fxShow.lt-md="true" *ngFor="let item of order.itemList">
+<mat-card fxHide="true" fxShow.lt-md="true" *ngFor="let item of order.itemList" class="po-mobile">
     <mat-card-content>
 
-        <div>
+        <div (click)="goToOrderDetailsPage()">
             <div>
                 <h3 class="po-header-text">
                     Arriving {{order.deliveryDate|date:'EEEE' }} by

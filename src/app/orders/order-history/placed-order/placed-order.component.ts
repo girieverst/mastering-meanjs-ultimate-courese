@@ -1,8 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
   OnInit,
+  Output,
 } from "@angular/core";
 import { Order } from "@core/orders/order";
 
@@ -15,7 +17,15 @@ import { Order } from "@core/orders/order";
 export class PlacedOrderComponent implements OnInit {
   @Input()
   order: Order;
+
+  @Output()
+  navigateOrderDetails = new EventEmitter<string>();
+
   constructor() {}
 
   ngOnInit() {}
+
+  goToOrderDetailsPage() {
+    this.navigateOrderDetails.emit(this.order.orderId);
+  }
 }

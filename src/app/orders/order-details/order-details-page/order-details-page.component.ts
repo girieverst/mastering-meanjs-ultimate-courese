@@ -14,16 +14,17 @@ import { Observable, Subscription } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
 
 @Component({
-  selector: "pm-order-success-page",
-  templateUrl: "./order-success-page.component.html",
+  selector: "pm-order-details-page",
+  templateUrl: "./order-details-page.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OrderSuccessPageComponent implements OnInit {
+export class OrderDetailsPageComponent implements OnInit {
   order: Order;
   orderSubscription: Subscription;
   orderId$: Observable<string>;
   fetchOrderFromServer$: Observable<string>;
   fetchOrderFromStore$: Observable<Order>;
+
   constructor(
     private route: ActivatedRoute,
     private orderStore: OrderStore,
@@ -31,7 +32,9 @@ export class OrderSuccessPageComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private cdRef: ChangeDetectorRef
-  ) {
+  ) {}
+
+  ngOnInit() {
     this.orderId$ = this.route.params.pipe(map((params) => params.id));
 
     this.fetchOrderFromServer$ = this.orderId$.pipe(
@@ -43,9 +46,7 @@ export class OrderSuccessPageComponent implements OnInit {
         this.orderStore.select(getOrderById(orderId))
       )
     );
-  }
 
-  ngOnInit() {
     this.orderSubscription = this.fetchOrderFromStore$.subscribe(
       (order: Order) => this.handleOrder(order)
     );
@@ -67,12 +68,6 @@ export class OrderSuccessPageComponent implements OnInit {
       this.navigateToShoppingPage();
     }
     this.cdRef.detectChanges();
-  }
-
-  navigateToOrderDetailPage(orderId: string) {
-    this.router.navigate(["../../order-details", this.order.orderId], {
-      relativeTo: this.route,
-    });
   }
 
   navigateToShoppingPage() {

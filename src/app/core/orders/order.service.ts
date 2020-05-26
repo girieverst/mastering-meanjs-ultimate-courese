@@ -26,11 +26,19 @@ export class OrderService {
     paymentId,
     orderTotal,
     cartItems,
+    shippingCost,
+    itemsCount,
+    estimatedTax,
+    orderSubTotal,
   }: {
     cartId: string;
     paymentId: string;
     orderTotal: number;
     cartItems: CartItem[];
+    shippingCost: number;
+    itemsCount: number;
+    estimatedTax: number;
+    orderSubTotal: number;
   }) {
     var today = new Date();
     var after7Days = new Date();
@@ -44,7 +52,11 @@ export class OrderService {
       user.fullname,
       cartItems,
       cartId,
-      paymentId
+      paymentId,
+      shippingCost,
+      itemsCount,
+      estimatedTax,
+      orderSubTotal
     );
 
     return this.httpClient.post(`${this.apiUrl}submit`, order).pipe(
@@ -67,6 +79,7 @@ export class OrderService {
         const createdOrder = { ...order, orderId: order._id };
         this.logService.log("Order created successfully", createdOrder);
         this.orderStore.addOrder(createdOrder);
+
         return of(createdOrder.orderId);
       }),
       catchError((e) => {
