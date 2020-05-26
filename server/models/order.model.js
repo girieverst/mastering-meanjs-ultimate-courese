@@ -17,7 +17,16 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  itemList: [{ name: "string", price: "number", imgUrl: "string" }],
+  itemList: [
+    {
+      id: "string",
+      price: "number",
+      name: "string",
+      imgUrl: "string",
+      quantity: "number",
+      itemTotal: "number",
+    },
+  ],
   cartId: {
     type: String,
     required: true,
@@ -30,7 +39,6 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-
   versionKey: false,
 });
 

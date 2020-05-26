@@ -8,7 +8,7 @@
       <span class="pm-title">Product Mart</span>
       <div fxShow="true" fxHide.lt-md="true">
         <a mat-button routerLink="/products">Products</a>
-        <a mat-button routerLink="/orders/order-history">Orders</a>
+        <a mat-button routerLink="/orders/order-history">Your Orders</a>
       </div>
       <span class="header-spacer"></span>
       <a *ngIf="!user" mat-button routerLink="/auth" routerLinkActive="active-link">
@@ -37,7 +37,7 @@
           Products
         </a>
         <a mat-list-item routerLink="/orders/order-history" (click)="sidenav.toggle()">
-          Orders
+          Your Orders
         </a>
       </mat-nav-list>
     </mat-sidenav>

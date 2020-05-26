@@ -2,7 +2,7 @@ import { CartItem } from "@core/cart/cart-item";
 
 export class Order {
   orderId = "";
-  createdAt = "";
+  createdAt = Date.now;
 
   constructor(
     public userId: string,

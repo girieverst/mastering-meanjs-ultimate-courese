@@ -1,44 +1,81 @@
-<mat-card *ngFor="let item of order.itemList" class="mat-typography po-mat-card">
+<mat-card class="mat-typography po-mat-card" fxShow="true" fxHide.lt-md="true">
     <mat-card-header class="po-mat-card-header">
         <mat-card-subtitle>
-            <div fxFlex>
-                ORDER PLACED {{order.createdAt|date}}
-            </div>
-            <div fxFlex>
-                TOTAL {{order.orderTotal|currency}}
-            </div>
-            <div fxFlex>
-                SHIP TO {{order.shippingAddress}}
-            </div>
-            <div fxFlex>
-                ORDER # {{order.orderId}}
-            </div>
+            <div class="po-item-header">
+                <div class="po-item-header-a">
+                    ORDER PLACED <br>
+                    {{order.createdAt|date}}
+                </div>
+                <div>
+                    TOTAL <br>
+                    {{order.orderTotal|currency}}
+                </div>
+                <div>
+                    SHIP TO <br>
 
+                    {{order.shippingAddress}}
+                </div>
+                <div>
+                    ORDER # <br>
+                    {{order.orderId}}
+
+                </div>
+                <div class="po-item-header-e">
+                    <button mat-raised-button color="accent">Order Details</button>
+                </div>
+            </div>
+            <div class="po-item-header-row">
+                <div>
+
+                </div>
+                <div>
+
+                </div>
+                <div>
+
+                </div>
+                <div>
+
+                </div>
+                <div>
+
+                </div>
+            </div>
         </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-        <strong>
-            Arriving {{order.deliveryDate|date:'EEEE' }} by {{order.deliveryDate|date:'h a' }}
-        </strong>
-        <div class="break"></div> <!-- break -->
-        <div class="container">
-            <div class="item">
-                <img [src]="item.imgUrl" class="item-image" />
+        <div class="po-item-list">
+            <div>
+                <h3 class="po-header-text">
+                    Arriving {{order.deliveryDate|date:'EEEE' }} by
+                    {{order.deliveryDate|date:'h a' }}
+                </h3>
             </div>
-            <div class="item-wide">
-                <span>{{item.name}}</span>
-                <span>{{item.itemTotal|currency}}</span>
+        </div>
+        <div class="po-item-list" *ngFor="let item of order.itemList">
+            <div class="po-item-list-a"> <img [src]="item.imgUrl" class="item-image" /></div>
+            <div> {{item.name}}</div>
+            <div class="po-item-list-c"> {{item.itemTotal|currency}}</div>
+        </div>
+    </mat-card-content>
+</mat-card>
 
+<mat-card fxHide="true" fxShow.lt-md="true" *ngFor="let item of order.itemList">
+    <mat-card-content>
+
+        <div>
+            <div>
+                <h3 class="po-header-text">
+                    Arriving {{order.deliveryDate|date:'EEEE' }} by
+                    {{order.deliveryDate|date:'h a' }}
+                </h3>
+                <h3>
+                    Shipped
+                </h3>
             </div>
-            <div class="item" fxShow="true" fxHide.lt-md="true">
-                <button mat-raised-button color="accent"> Order Details </button></div>
-
-            <div class="item" fxHide="true" fxShow.lt-md="true">
-                <button mat-raised-button color="accent" aria-label="Order Detail">
-                    <mat-icon>double_arrow</mat-icon>
-                </button></div>
+            <div> <img [src]="item.imgUrl" class="item-image" /></div>
+            <mat-divider></mat-divider>
         </div>
 
     </mat-card-content>
-
 </mat-card>
