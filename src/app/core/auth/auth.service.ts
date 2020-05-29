@@ -35,7 +35,7 @@ export class AuthService {
 
   login(email: string, password: string) {
     const loginCredentials = { email, password };
-    console.log("login credentials", loginCredentials);
+    this.logService.log("login credentials", loginCredentials);
 
     return this.httpClient
       .post<UserDto>(`${this.apiUrl}login`, loginCredentials)
@@ -43,7 +43,7 @@ export class AuthService {
         switchMap(({ user, token }) => {
           this.setUser(user);
           this.tokenStorage.setToken(token);
-          console.log(`user found`, user);
+          this.logService.log(`user found`, user);
           return of(this.redirectUrlAfterLogin);
         }),
         catchError((e) => {
@@ -56,12 +56,9 @@ export class AuthService {
   }
 
   logout() {
-    // remove user from suject
-    // remove token from localstorage
-
     this.tokenStorage.removeToken();
     this.setUser(null);
-    console.log("user did logout successfull");
+    this.logService.log("user did logout successfull");
   }
 
   get user() {
@@ -71,13 +68,10 @@ export class AuthService {
   register(userToSave: any) {
     return this.httpClient.post<any>(`${this.apiUrl}register`, userToSave).pipe(
       switchMap(({ user, token }) => {
-        this.setUser(user);
-        this.tokenStorage.setToken(token);
-        console.log(`user registered successfully`, user);
-        return of(user);
+        return this.setUserAfterUserFoundFromServer(user, token);
       }),
       catchError((e) => {
-        console.log(`server error occured`, e);
+        this.logService.log(`server error occured`, e);
         return throwError(`Registration failed please contact to admin`);
       })
     );
@@ -90,13 +84,11 @@ export class AuthService {
     }
 
     return this.httpClient.get<any>(`${this.apiUrl}findme`).pipe(
-      switchMap(({ user }) => {
-        this.setUser(user);
-        console.log(`user found`, user);
-        return of(user);
+      switchMap(({ user, token }) => {
+        return this.setUserAfterUserFoundFromServer(user, token);
       }),
       catchError((e) => {
-        console.log(
+        this.logService.log(
           `Your login details could not be verified. Please try again`,
           e
         );
@@ -107,7 +99,21 @@ export class AuthService {
     );
   }
 
-  private setUser(user) {
-    this.user$.next(user);
+  private setUserAfterUserFoundFromServer(user: User, token: string) {
+    this.setUser(user);
+    this.tokenStorage.setToken(token);
+    this.logService.log(`User found in server`, user);
+
+    return this.user$;
+  }
+
+  private setUser(user: any) {
+    if (user) {
+      const newUser = { ...user, id: user._id };
+      this.user$.next(newUser);
+      this.logService.log(`Logged In User`, newUser);
+    } else {
+      this.user$.next(null);
+    }
   }
 }
