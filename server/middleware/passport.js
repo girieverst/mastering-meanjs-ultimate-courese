@@ -1,5 +1,5 @@
 const passport = require('passport');
-const LocalStrategy = require('passport-local');
+const LocalStrategy = require('passport-local').Strategy;
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJWT = require('passport-jwt').ExtractJwt;
 
@@ -8,10 +8,10 @@ const userController = require('../controllers/user.controller');
 
 const localLogin = new LocalStrategy(
   {
-    usernameFeild: 'email'
+    usernameField: 'email'
   },
   async (email, password, done) => {
-    const user = userController.getUserByEmailIdAndPassword(email, password);
+    const user = await userController.getUserByEmailIdAndPassword(email, password);
     return user
       ? done(null, user)
       : done(null, false, {
