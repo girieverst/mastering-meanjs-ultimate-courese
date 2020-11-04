@@ -5,11 +5,20 @@ import {
   OnInit,
 } from "@angular/core";
 import { Router } from "@angular/router";
-import { getOrderTotal } from "@core/cart/cart-selector";
+import { CartItem } from "@core/cart/cart-item";
+import {
+  getCartItems,
+  getCartItemsCount,
+  getCartSubTotal,
+  getEstimatedTax,
+  getOrderTotal,
+  getShippingCost,
+} from "@core/cart/cart-selector";
 import { CartStore } from "@core/cart/cart-store";
 import { CartService } from "@core/cart/cart.service";
 import { LogService } from "@core/log.service";
-import { Subscription } from "rxjs";
+import { OrderService } from "@core/orders/order.service";
+import { combineLatest, Subscription } from "rxjs";
 
 declare let paypal: any;
 
@@ -21,23 +30,51 @@ declare let paypal: any;
 })
 export class PaypalCheckoutComponent implements OnInit, OnDestroy {
   orderTotalSubscription: Subscription;
-  orderTotalToCharge: number;
+
+  orderTotal: number = 0;
+  cartItems: CartItem[];
+  shippingCost: number;
+  itemsCount: number;
+  orderSubTotal: number;
+  estimatedTax: number;
+
   constructor(
     private cartService: CartService,
     private router: Router,
     private cartStore: CartStore,
-    private logService: LogService
+    private logService: LogService,
+    private orderService: OrderService
   ) {}
 
   ngOnInit() {
-    // get order total.
-
-    this.orderTotalSubscription = this.cartStore
-      .select(getOrderTotal)
-      .subscribe((orderTotal: number) => {
-        this.logService.log(`Get order total to charge: ${orderTotal}`);
-        this.orderTotalToCharge = orderTotal;
-      });
+    // get order details, we will use heigher Order observable operator
+    // combinelatest to get all order properties.
+    this.orderTotalSubscription = combineLatest(
+      this.cartStore.select(getOrderTotal),
+      this.cartStore.select(getCartItems),
+      this.cartStore.select(getShippingCost),
+      this.cartStore.select(getCartItemsCount),
+      this.cartStore.select(getEstimatedTax),
+      this.cartStore.select(getCartSubTotal)
+    ).subscribe(
+      ([
+        orderTotal,
+        cartItems,
+        shippingCost,
+        itemsCount,
+        estimatedTax,
+        orderSubTotal,
+      ]) => {
+        this.logService.log(`Order Total is`, orderTotal);
+        this.logService.log(`Cart Items`, cartItems);
+        this.orderTotal = orderTotal;
+        this.cartItems = cartItems as CartItem[];
+        this.shippingCost = shippingCost;
+        this.itemsCount = itemsCount;
+        this.estimatedTax = estimatedTax as number;
+        this.orderSubTotal = orderSubTotal as number;
+      }
+    );
 
     // render paypal button pass paypal configuration.
     paypal.Button.render(this.paypalConfig, "#paypal-button-container");
@@ -53,7 +90,10 @@ export class PaypalCheckoutComponent implements OnInit, OnDestroy {
     return {
       style: { size: "responsive" },
       env: "sandbox",
-      client: { sandbox: "AeYE9X39K74-yVLawilg-gzZzaVPhomdtWXoco94yoqAqeLP5MD93efN_LDVb4vG91eqFTSaJjFP4AhE" },
+      client: {
+        sandbox:
+          "AeYE9X39K74-yVLawilg-gzZzaVPhomdtWXoco94yoqAqeLP5MD93efN_LDVb4vG91eqFTSaJjFP4AhE",
+      },
       commit: true,
       payment: (data, actions) => {
         return actions.payment.create({
@@ -61,7 +101,7 @@ export class PaypalCheckoutComponent implements OnInit, OnDestroy {
             transactions: [
               {
                 amount: {
-                  total: this.orderTotalToCharge,
+                  total: this.orderTotal,
                   currency: "USD", // in production you may want to support other currency.
                 },
               },
@@ -74,8 +114,37 @@ export class PaypalCheckoutComponent implements OnInit, OnDestroy {
         // navigate to shopping page
         return actions.payment.execute().then((payment) => {
           this.logService.log(`The payment is successful`, payment);
-          this.cartService.clearCart();
-          this.router.navigate(["products"]);
+          const { cart: cartId, id: paymentId } = payment;
+
+          const {
+            orderTotal,
+            cartItems,
+            shippingCost,
+            itemsCount,
+            estimatedTax,
+            orderSubTotal,
+          } = this;
+
+          this.orderService
+            .submitOrder({
+              cartId,
+              cartItems,
+              orderTotal,
+              paymentId,
+              shippingCost,
+              itemsCount,
+              estimatedTax,
+              orderSubTotal,
+            })
+            .subscribe((orderId) => {
+              this.logService.log("Order created successfully", orderId);
+              this.logService.log(
+                "Redirecting to Thankyou Page pending...",
+                orderId
+              );
+              this.cartService.clearCart();
+              this.router.navigate(["products"]);
+            });
         });
       },
       onCancel: (data) => {
