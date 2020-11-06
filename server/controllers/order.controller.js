@@ -18,8 +18,17 @@ async function getAllOrders() {
   return await Order.find({});
 }
 
+async function getOrdersByUserId(userId) {
+  console.log(`Searching orders for user`, userId);
+
+  return await Order.find({
+    userId,
+  });
+}
+
 module.exports = {
   submitOrder,
   getOrderById,
-  getAllOrders
+  getAllOrders,
+  getOrdersByUserId,
 };
