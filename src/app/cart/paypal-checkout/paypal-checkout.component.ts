@@ -138,12 +138,12 @@ export class PaypalCheckoutComponent implements OnInit, OnDestroy {
             })
             .subscribe((orderId) => {
               this.logService.log("Order created successfully", orderId);
-              this.logService.log(
-                "Redirecting to Thankyou Page pending...",
-                orderId
-              );
+
               this.cartService.clearCart();
-              this.router.navigate(["products"]);
+
+              this.logService.log("Redirecting to Thankyou Page.", orderId);
+
+              this.router.navigate(["orders/success"]);
             });
         });
       },
