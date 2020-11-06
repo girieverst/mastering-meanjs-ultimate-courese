@@ -10,6 +10,9 @@ router.post("/submit", asyncHandler(submitOrder));
 // http://localhost:4050/api/orders/5ecd57e5c1aa49646c9f70aa
 router.get('/:orderId', asyncHandler(getOrderById));
 
+// http://localhost:4050/api/orders
+router.get('/', asyncHandler(getAllOrders));
+
 
 async function submitOrder(req, res, next) {
   const orderToSave = req.body;
@@ -23,6 +26,11 @@ async function submitOrder(req, res, next) {
 async function getOrderById(req, res, next) {
   const order = await orderController.getOrderById(req.params.orderId);
   res.json(order);
+}
+
+async function getAllOrders(req, res, next) {
+  const orders = await orderController.getAllOrders();
+  res.json(orders);
 }
 
 module.exports = router;

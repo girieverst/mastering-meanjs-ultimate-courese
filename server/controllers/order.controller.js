@@ -12,7 +12,14 @@ async function getOrderById(orderId) {
   return await Order.findById(orderId);
 }
 
+async function getAllOrders() {
+  console.log(`Fetching all orders`);
+
+  return await Order.find({});
+}
+
 module.exports = {
   submitOrder,
   getOrderById,
+  getAllOrders
 };
