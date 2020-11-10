@@ -21,14 +21,22 @@ async function getAllOrders() {
 async function getOrdersByUserId(userId) {
   console.log(`Searching orders for user`, userId);
 
-  return await Order.find({
+  const orders = await Order.find({
     userId,
   });
+
+  const mappedOrder = orders.map((order) => ({
+    ...order.toObject(),
+    orderId: order._id,
+  }));
+
+  return mappedOrder;
 }
 
 module.exports = {
   submitOrder,
   getOrderById,
   getAllOrders,
+  
   getOrdersByUserId,
 };
