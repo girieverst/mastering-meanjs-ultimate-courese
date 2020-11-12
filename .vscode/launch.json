@@ -18,6 +18,20 @@
                "run-script",
                "server:debug"
            ]
+        },
+        {
+          "name": "Launch Angular",
+          "type": "chrome",
+          "request": "launch",
+          "preLaunchTask": "npm: client",
+          "url": "http://localhost:4230/",
+          "webRoot": "${workspaceFolder}"
         }
+    ],
+    "compounds": [
+      {
+        "name": "Server Client Both",
+        "configurations": ["Server Debug", "Launch Angular"]
+      }
     ]
 }
