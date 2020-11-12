@@ -1,21 +1,37 @@
 const express = require("express");
 const orderController = require("../controllers/order.controller");
 const asyncHandler = require("express-async-handler");
+const passport = require("passport");
 
 const router = express.Router();
 
 // http://localhost:4050/api/orders/submit
-router.post("/submit", asyncHandler(submitOrder));
+router.post(
+  "/submit",
+  passport.authenticate("jwt", { session: false }),
+  asyncHandler(submitOrder)
+);
 
 // http://localhost:4050/api/orders/5ecd57e5c1aa49646c9f70aa
-router.get('/:orderId', asyncHandler(getOrderById));
+router.get(
+  "/:orderId",
+  passport.authenticate("jwt", { session: false }),
+  asyncHandler(getOrderById)
+);
 
 // http://localhost:4050/api/orders
-router.get('/', asyncHandler(getAllOrders));
+router.get(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  asyncHandler(getAllOrders)
+);
 
 // http://localhost:4050/api/orders/userid/123
-router.get('/userid/:userId', asyncHandler(getOrdersByUserId));
-
+router.get(
+  "/userid/:userId",
+  passport.authenticate("jwt", { session: false }),
+  asyncHandler(getOrdersByUserId)
+);
 
 async function submitOrder(req, res, next) {
   const orderToSave = req.body;
