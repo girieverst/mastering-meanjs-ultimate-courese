@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
+import { Subject, of } from 'rxjs';
 
 export interface User {
   email: string;
